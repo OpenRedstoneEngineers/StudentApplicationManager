@@ -1,0 +1,15 @@
+name: StudentApplicationManager
+version: 1.0
+main: org.stonecipher.StudentApplicationManager
+author: Nickster258
+api-version: 1.13
+commands:
+  'apply':
+    description: Apply to school
+    usage: /apply
+  'yes':
+    description: Affirmative answer to a question
+    usage: /yes
+  'no':
+    description: Negative answer to a question
+    usage: /no
