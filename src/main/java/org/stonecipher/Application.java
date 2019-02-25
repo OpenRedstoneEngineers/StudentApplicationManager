@@ -2,7 +2,6 @@ package org.stonecipher;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.util.List;
 import java.util.ArrayList;
 
 public class Application {
