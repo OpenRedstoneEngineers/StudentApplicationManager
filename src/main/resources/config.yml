@@ -1,0 +1,31 @@
+application:
+  student:
+    available_to_group: Visitor
+    promote_to_group: Student
+    questions:
+      1:
+        question: "Are you interested in learning about computational redstone?"
+        answer: "YES"
+      2:
+        question: "Do you have previous experience in redstone?"
+        answer: "EITHER"
+      3:
+        question: "Have you read and agree the rules? (https://openredstone.org/rules)"
+        answer: "YES"
+    congratulations: "Congratulations! You can claim your plot by executing §7/p auto"
+    ohnoyousuck: "That was not an expected answer. Restart your application process by executing §7/apply"
+  builder:
+    available_to_group: Student
+    promote_to_group: Builder
+    questions:
+      1:
+        question: "Are you interested in learning MORE about computational redstone?"
+        answer: "YES"
+      2:
+        question: "Do you have ALL the previous experience in redstone?"
+        answer: "YES"
+      3:
+        question: "Have you read and agree the rules AGAIN? (https://openredstone.org/rules)"
+        answer: "YES"
+    congratulations: "Congratulations! You can claim your BUILD plot by executing §7/p auto"
+    ohnoyousuck: "That was not an expected answer. Restart your application process by executing §7/apply"

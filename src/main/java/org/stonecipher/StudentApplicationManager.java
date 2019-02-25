@@ -7,23 +7,35 @@ import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StudentApplicationManager extends JavaPlugin {
+
+    private FileConfiguration config = getConfig();
 
     private static Permission perms = null;
     private ArrayList<Question> questions = new ArrayList<Question>();
     private ArrayList<Applicant> applicants = new ArrayList<Applicant>();
+    private ArrayList<Application> applications = new ArrayList<Application>();
 
     @Override
     public void onEnable() {
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+        loadApplications();
+        for (Application application : applications) {
+            getLogger().info("Loaded application: " + application.getApplicationName());
+        }
         setupPermissions();
         setupQuestions();
+        getLogger().info("Loaded StudentApplicationManager");
     }
 
     @Override
@@ -63,7 +75,7 @@ public class StudentApplicationManager extends JavaPlugin {
             }
 
             Applicant applicant = getApplicant(p);
-            if (applicant.evaluate(Question.Answer.TRUE, questions.get(applicant.getProgress()))) {
+            if (applicant.evaluate(Question.Answer.YES, questions.get(applicant.getProgress()))) {
                 applicant.incrementProgress();
                 if(isFinished(applicant)) {
                     promoteApplicant(applicant);
@@ -86,7 +98,7 @@ public class StudentApplicationManager extends JavaPlugin {
             }
 
             Applicant applicant = getApplicant(p);
-            if (applicant.evaluate(Question.Answer.FALSE, questions.get(applicant.getProgress()))) {
+            if (applicant.evaluate(Question.Answer.NO, questions.get(applicant.getProgress()))) {
                 applicant.incrementProgress();
                 if(isFinished(applicant)) {
                     promoteApplicant(applicant);
@@ -99,6 +111,21 @@ public class StudentApplicationManager extends JavaPlugin {
             }
         }
         return true;
+    }
+    private void setupConfig() {
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdir();
+        }
+        File file = new File(getDataFolder(), "config.yml");
+    }
+    private void loadApplications() {
+        String basePath = "application";
+        for (String appName : getConfig().getConfigurationSection(basePath).getKeys(false)) {
+            String presentPath = basePath + "." + appName;
+            ConfigurationSection section = getConfig().getConfigurationSection(presentPath);
+            Application tmpApplication = new Application(appName, section);
+            applications.add(tmpApplication);
+        }
     }
 
     private void promoteApplicant(Applicant applicant) {
@@ -149,9 +176,9 @@ public class StudentApplicationManager extends JavaPlugin {
     }
 
     private void setupQuestions() {
-        questions.add(new Question(Question.Answer.TRUE, "Are you interested in learning about computational redstone?"));
+        questions.add(new Question(Question.Answer.YES, "Are you interested in learning about computational redstone?"));
         questions.add(new Question(Question.Answer.EITHER, "Do you have previous experience in redstone?"));
-        questions.add(new Question(Question.Answer.TRUE, "Have you read the rules? (https://openredstone.org/rules)"));
+        questions.add(new Question(Question.Answer.YES, "Have you read the rules? (https://openredstone.org/rules)"));
     }
 
     private boolean setupPermissions() {
